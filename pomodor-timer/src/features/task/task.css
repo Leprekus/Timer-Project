@@ -18,12 +18,8 @@
     min-width: 80px;
     min-height: 90px;
 
-}
-.add {
-    font-size: 2rem;
-}
-.edit {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+
 }
 
 .taskButton:active {
@@ -49,4 +45,28 @@
     transition: .2s ease-in-out;
     
     text-decoration: none;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem;
+    
 }
+
+
+.fields {
+    border-radius: .5rem;
+    border-style: none;
+    outline:none;
+    background: rgb(255, 255, 255);
+    font-size: 18px;
+    padding: 0.5rem 1rem;
+    color: #555;
+    max-width: 300px;
+    
+    overflow-x: hidden;
+    resize: none;
+    height: fit-content;
+  }
+
+

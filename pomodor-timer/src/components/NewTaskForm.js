@@ -43,7 +43,7 @@ export const NewTaskForm = (props) => {
             description,
         }))
         dispatch(editTask({}))
-        console.log(taskToEdit)
+        
     }
 
     return (

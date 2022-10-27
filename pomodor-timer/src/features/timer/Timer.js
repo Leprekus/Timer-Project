@@ -4,15 +4,25 @@ import { useState, useEffect } from 'react'
 //import { useSelector, useDispatch } from 'react-redux'
 import { useSelector, useDispatch  } from 'react-redux'
 import { 
-    selectTime, 
-    startTimer, 
+    selectTime,  
     increaseTime, 
-    decreaseTime } from './timerSlice'
+    decreaseTime,
+    startTimer,
+    selectUpdate,
+    changeUpdate
+    } from './timerSlice'
 
 export const Timer = () => {
     const dispatch = useDispatch()
     const time = useSelector(selectTime)
- 
+    const update = useSelector(selectUpdate)
+    useEffect(() => {
+        if(update) {
+            dispatch(startTimer())
+        }
+    }, [update, dispatch])
+
+
     return (
     <div className='box'>
         
@@ -21,8 +31,8 @@ export const Timer = () => {
             <button onClick={() =>dispatch(decreaseTime())} className='secondaryButton'>Decrease</button>
         </div>
         <h1 id='time'>{time}</h1>
-        <button className="primaryButton">
-            START
+        <button onClick={() => dispatch(changeUpdate())} className="primaryButton">
+           { update ? 'PAUSE' : 'START' }
         </button>
     </div>
     )

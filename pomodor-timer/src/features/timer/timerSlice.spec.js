@@ -7,12 +7,12 @@ import timerReducer, {
 describe('timer reducer', () => {
     const initialState = {
         value: 25,
-        isActive: false
+        update: false
     }
     it('should handle initial state', () => {
         expect(timerReducer(undefined, { type: 'unknown' })).toEqual({
             value: 25,
-            isActive: false,
+            update: false,
           });
     })
     it('should handle increment', () => {
@@ -32,4 +32,12 @@ describe('timer reducer', () => {
         const actual = timerReducer(edgeCaseState, decreaseTime());
         expect(actual.value).toEqual(0);
         });
+        it('should update time', () => {
+            const edgeCaseState = {
+                value: 0,
+                isActive: false
+            }
+            const actual = timerReducer(edgeCaseState, decreaseTime());
+            expect(actual.value).toEqual(0);
+            });
 })

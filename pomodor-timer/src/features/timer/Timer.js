@@ -7,9 +7,10 @@ import {
     selectTime,  
     increaseTime, 
     decreaseTime,
-    startTimer,
     selectUpdate,
-    changeUpdate
+    changeUpdate,
+    startTimer,
+    stopTimer
     } from './timerSlice'
 
 export const Timer = () => {
@@ -20,9 +21,10 @@ export const Timer = () => {
         if(update) {
             dispatch(startTimer())
         }
+        if(update === false){
+            dispatch(stopTimer())
+        }
     }, [update, dispatch])
-
-
     return (
     <div className='box'>
         

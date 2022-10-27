@@ -34,18 +34,24 @@ export const { increaseTime, decreaseTime, setTime, changeUpdate } = timerSlice.
 export const selectTime = state => state.timer.value
 export const selectUpdate = state => state.timer.update
 
+let intervalId;
 export const startTimer = () => (dispatch, getState) => {
-    const intervalId = setInterval(() => {
-        const time = selectTime(getState());
-        if(time <= 0)  {
-            return (
-            clearInterval(intervalId),
-            dispatch(changeUpdate())
-            )
-        }
-        dispatch(setTime())
-    },300)
-    
-  };
+    intervalId = setInterval(() => {
+       const time = selectTime(getState());
+       if(time <= 0)  {
+           return (
+           clearInterval(intervalId),
+           dispatch(changeUpdate())
+           )
+       }
+       dispatch(setTime())
+   },300)
+   
+ };
+ export const stopTimer = () => (dispatch, getState) => {
+    const update = selectUpdate(getState())
+    if(update === false) clearInterval(intervalId)
+   
+ };
 
 export default timerSlice.reducer

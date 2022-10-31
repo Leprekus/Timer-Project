@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { changePopupTrigger, selectMinutes, selectPopupTrigger } from "./timerSlice"
+import { changePopupTrigger, selectTimeSection, selectPopupTrigger } from "./timerSlice"
 import './settingsPopup.css'
 import './timer.css'
 import { useReducer, useRef, useState } from "react"
@@ -8,7 +8,7 @@ export const SettingsPopup = () => {
     const trigger = useSelector(selectPopupTrigger)
     const dispatch = useDispatch()
 
-    const pomodoro = useSelector(selectMinutes)
+    const pomodoro = useSelector(selectTimeSection)
     const shortBreak = useRef()
     const longBreak = useRef()
     const [isDisabled, setIsDisabled] = useState(false)

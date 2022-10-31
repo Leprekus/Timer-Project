@@ -28,45 +28,66 @@ const timerSlice = createSlice({
     // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
         increaseTime(state, { payload }) {
-            const { section, timeUnit } = payload 
+            const { section } = payload 
 
-            let minutes = parseInt(state.time[section][timeUnit])
+            let minutes = parseInt(state.time[section].minutes)
             minutes += 25
-            console.log(minutes)
-            state.time[section][timeUnit] = minutes.toString()
+            state.time[section].minutes = minutes.toString()
             
         },
-        decreaseTime(state){
-            let minutes = parseInt(state.minutes)
+        decreaseTime(state, { payload }){
+            const { section } = payload
+            let minutes = parseInt(state.time[section].minutes)
             const check = minutes - 25 >= 0 ? minutes -= 25: 0
-            state.minutes = check.toString()
+            state.time[section].minutes = check.toString()
         }, 
         changeUpdate(state) {
             state.update = !state.update
         },
-        updateMinutes(state) {
-            let minutes = parseInt(state.minutes)
+        updateMinutes(state, { payload }) {
+            const { section } = payload
+            let minutes = parseInt(state.time[section].minutes)
             minutes -= 1
             if(minutes <= 9) {
                 minutes = `0${minutes}`
             } 
-            state.minutes = minutes.toString()
+            state.time[section].minutes = minutes.toString()
         },
-        updateSeconds(state) {
-            let seconds = parseInt(state.seconds)
+        updateSeconds(state, { payload }) {
+            const { section } = payload
+            let seconds = parseInt(state.time[section].seconds)
             seconds -= 1
             if(seconds <= 9) {
                 seconds = `0${seconds}`
             } 
-            state.seconds = seconds.toString()
+            state.time[section].seconds = seconds.toString()
         },
-        resetSeconds(state) {
-            state.seconds = '60'
+        resetSeconds(state, { payload }) {
+            const { section } = payload
+            state.time[section].seconds = '60'
         },
-        resetTimer(state) {
-            state.minutes = '25'
-            state.seconds = '00'
-            state.update = false
+        resetTimer(state, { payload }) {
+            const { section } = payload
+            if(section === 'pomodoro') {
+                state.time[section].minutes = '25'
+                state.time[section].seconds = '00'
+                state.update = false
+            }
+
+            if(section === 'shortBreak') {
+                state.time[section].minutes = '5'
+                state.time[section].seconds = '00'
+                state.update = false
+
+            }
+
+            if(section === 'longBreak') {
+                state.time[section].minutes = '15'
+                state.time[section].seconds = '00'
+                state.update = false
+
+            }
+            
         },
         changePopupTrigger(state) {
             state.popupTrigger = !state.popupTrigger
@@ -85,10 +106,13 @@ export const selectPopupTrigger = state => state.timer.popupTrigger
 
 let intervalId;
 
-export const startTimer = () => (dispatch, getState) => {
+export const startTimer = (payload) => (dispatch, getState) => {
     intervalId = setInterval(() => {
-       const minutes = selectTimeSection(getState());
-       const seconds = selectSeconds(getState())
+        const { section } = payload
+
+        const timeSection = selectTimeSection(getState())
+        const minutes = timeSection[section].minutes;
+        const seconds = timeSection[section].seconds;
        //stop when it reaches 00:00
        if(minutes <= 0 && seconds <= 0)  {
            return (
@@ -96,12 +120,14 @@ export const startTimer = () => (dispatch, getState) => {
            dispatch(changeUpdate())
            )
        }
-       //reduce minutes and reset seconds to 59
+       //reduces minutes and reset seconds to 59
        if(seconds <= 0){
-        dispatch(updateMinutes())
-        dispatch(resetSeconds())
+        dispatch(updateMinutes({ section, timeUnit:'minutes' }))
+        dispatch(resetSeconds({ section, timeUnit:'seconds' }))
        }
-       dispatch(updateSeconds())
+       //subtracts seconds
+       dispatch(updateSeconds({ section, timeUnit:'seconds'}))
+
    },1000)
    
  };

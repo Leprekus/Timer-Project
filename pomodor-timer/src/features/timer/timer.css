@@ -37,7 +37,7 @@
     padding: 0.9em 1.5em;
     border: none;
     border-radius: .5rem;
-    background: #c9c9c9;
+    background: #717171;
 
     color: rgb(255, 255, 255);
     font-size: 1rem;
@@ -48,16 +48,17 @@
     cursor: pointer;
     transition: .2s ease-in-out;
 
-    box-shadow: -6px -6px 14px rgba(255, 255, 255, .7),
-    -6px -6px 10px rgba(255, 255, 255, .5),
-    6px 6px 8px rgba(255, 255, 255, .075),
-    6px 6px 10px rgba(0, 0, 0, .15);
 
 
 }
 
 .secondaryButton:active {
     background:#dcdcdc;
+}
+
+.secondaryButton > img {
+    padding: 0;
+    width: 40px;
 }
 
 .box {

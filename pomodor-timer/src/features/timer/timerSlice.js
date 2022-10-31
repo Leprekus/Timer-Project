@@ -4,7 +4,8 @@ import { selectCount } from '../counter/counterSlice'
 const initialState ={
     minutes: '25',
     seconds: '00',
-    update: false
+    update: false,
+    popupTrigger: false
 }
 
 const timerSlice = createSlice({
@@ -46,15 +47,21 @@ const timerSlice = createSlice({
             state.minutes = '25'
             state.seconds = '00'
             state.update = false
+        },
+        changePopupTrigger(state) {
+            state.popupTrigger = !state.popupTrigger
         }
     },
   
 })
 
-export const { increaseTime, decreaseTime, changeUpdate, updateMinutes, updateSeconds, resetSeconds, resetTimer } = timerSlice.actions
+export const { increaseTime, decreaseTime, changeUpdate, updateMinutes, updateSeconds, resetSeconds, resetTimer, 
+                changePopupTrigger} = timerSlice.actions
 export const selectMinutes = state => state.timer.minutes
 export const selectSeconds = state => state.timer.seconds
 export const selectUpdate = state => state.timer.update
+
+export const selectPopupTrigger = state => state.timer.popupTrigger
 
 let intervalId;
 

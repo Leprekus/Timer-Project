@@ -1,0 +1,69 @@
+.popup {
+    background-color: rgba(0, 0, 0, 0.4);
+    width: 100%;
+    height: 100vh;
+
+    position: fixed;
+    display: flex;
+    justify-content: center;
+}
+
+.popupInner {
+    width: 600px;
+    height: 600px;
+    background-color: #fff;
+    margin-top: 100px;
+
+    border-radius: .5rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem;
+
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    height: fit-content;
+}
+
+.inputContainer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.inputContainer > * {
+    margin: 1.5rem 0;
+}
+
+hr {
+    width: 100%;
+    margin: 0.5rem auto;
+    
+    height: 1px;
+    background-color: #ccc;
+    border: none;
+}
+
+input {
+
+    border-radius: .5rem;
+    border-style: none;
+    outline:none;
+    background: rgb(252, 252, 252);
+    font-size: 18px;
+    padding: 0.5rem 1rem;
+    color: #555;
+    max-width: 300px;
+    
+    max-width: 10rem;
+
+    box-shadow: -6px -6px 7px rgba(230, 230, 230, 0.7),
+    -6px -6px 10px rgba(255, 255, 255, .5),
+    6px 6px 8px rgba(255, 255, 255, .075),
+    6px 6px 10px rgba(0, 0, 0, .15);
+      
+}

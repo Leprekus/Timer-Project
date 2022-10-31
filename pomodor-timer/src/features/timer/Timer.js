@@ -3,20 +3,24 @@ import { useState, useEffect } from 'react'
 
 //import { useSelector, useDispatch } from 'react-redux'
 import { useSelector, useDispatch  } from 'react-redux'
-import { 
-    selectTime,  
+import {   
     increaseTime, 
     decreaseTime,
     selectUpdate,
     changeUpdate,
     startTimer,
-    stopTimer
+    stopTimer,
+    selectMinutes,
+    selectSeconds
     } from './timerSlice'
+    import formatTime from '../../util/formatTime'
 
 export const Timer = () => {
     const dispatch = useDispatch()
-    const time = useSelector(selectTime)
+    const minutes = useSelector(selectMinutes)
+    const seconds  = useSelector(selectSeconds)
     const update = useSelector(selectUpdate)
+    const [date, setDate] = useState(Date.now())
     useEffect(() => {
         if(update) {
             dispatch(startTimer())
@@ -32,7 +36,8 @@ export const Timer = () => {
             <button onClick={() =>dispatch(increaseTime())} className='secondaryButton'>Increase</button>
             <button onClick={() =>dispatch(decreaseTime())} className='secondaryButton'>Decrease</button>
         </div>
-        <h1 id='time'>{time}</h1>
+        <h1 id='time'>{`${minutes}:${seconds}`}</h1>
+        <h1>{formatTime(date)}</h1>
         <button onClick={() => dispatch(changeUpdate())} className="primaryButton">
            { update ? 'PAUSE' : 'START' }
         </button>

@@ -2,7 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { selectCount } from '../counter/counterSlice'
 
 const initialState ={
-    value: 25,
+    minutes: '25',
+    seconds: '00',
     update: false
 }
 
@@ -12,40 +13,64 @@ const timerSlice = createSlice({
     // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
         increaseTime(state) {
-            state.value += 25
+            state.minutes += 25
             
         },
         decreaseTime(state){
-            const check = state.value - 25 >= 0 ? state.value -= 25: 0
-            state.value = check
+            const check = state.minutes - 25 >= 0 ? state.minutes -= 25: 0
+            state.minutes = check
         }, 
-
-        setTime(state) {
-            state.value -= 1
-        },
         changeUpdate(state) {
             state.update = !state.update
+        },
+        updateMinutes(state) {
+            let minutes = parseInt(state.seconds)
+            minutes -= 1
+            if(minutes <= 9) {
+                minutes = `0${minutes}`
+            } 
+            state.seconds = minutes.toString()
+        },
+        updateSeconds(state) {
+            let seconds = parseInt(state.seconds)
+            seconds -= 1
+            if(seconds <= 9) {
+                seconds = `0${seconds}`
+            } 
+            state.seconds = seconds.toString()
+        },
+        resetSeconds(state) {
+            state.seconds = '60'
         }
     },
   
 })
 
-export const { increaseTime, decreaseTime, setTime, changeUpdate } = timerSlice.actions
-export const selectTime = state => state.timer.value
+export const { increaseTime, decreaseTime, changeUpdate, updateMinutes, updateSeconds, resetSeconds } = timerSlice.actions
+export const selectMinutes = state => state.timer.minutes
+export const selectSeconds = state => state.timer.seconds
 export const selectUpdate = state => state.timer.update
 
 let intervalId;
+
 export const startTimer = () => (dispatch, getState) => {
     intervalId = setInterval(() => {
-       const time = selectTime(getState());
-       if(time <= 0)  {
+       const minutes = selectMinutes(getState());
+       const seconds = selectSeconds(getState())
+       //stop when it reaches 00:00
+       if(minutes <= 0 && seconds <= 0)  {
            return (
            clearInterval(intervalId),
            dispatch(changeUpdate())
            )
        }
-       dispatch(setTime())
-   },300)
+       //reduce minutes and reset seconds to 59
+       if(seconds <= 0){
+        dispatch(updateMinutes())
+        dispatch(resetSeconds())
+       }
+       dispatch(updateSeconds())
+   },1000)
    
  };
  export const stopTimer = () => (dispatch, getState) => {

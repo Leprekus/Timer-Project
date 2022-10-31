@@ -28,9 +28,9 @@
 }
 
 .buttonContainer {
-    width: 70%;
+    width: 80%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
 }
 
 .secondaryButton {

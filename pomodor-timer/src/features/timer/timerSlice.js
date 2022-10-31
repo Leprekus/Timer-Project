@@ -41,12 +41,17 @@ const timerSlice = createSlice({
         },
         resetSeconds(state) {
             state.seconds = '60'
+        },
+        resetTimer(state) {
+            state.minutes = '25'
+            state.seconds = '00'
+            state.update = false
         }
     },
   
 })
 
-export const { increaseTime, decreaseTime, changeUpdate, updateMinutes, updateSeconds, resetSeconds } = timerSlice.actions
+export const { increaseTime, decreaseTime, changeUpdate, updateMinutes, updateSeconds, resetSeconds, resetTimer } = timerSlice.actions
 export const selectMinutes = state => state.timer.minutes
 export const selectSeconds = state => state.timer.seconds
 export const selectUpdate = state => state.timer.update

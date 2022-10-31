@@ -11,7 +11,8 @@ import {
     startTimer,
     stopTimer,
     selectMinutes,
-    selectSeconds
+    selectSeconds,
+    resetTimer
     } from './timerSlice'
     import formatTime from '../../util/formatTime'
 
@@ -35,12 +36,14 @@ export const Timer = () => {
         <div className='buttonContainer'>
             <button onClick={() =>dispatch(increaseTime())} className='secondaryButton'>Increase</button>
             <button onClick={() =>dispatch(decreaseTime())} className='secondaryButton'>Decrease</button>
+            <button onClick={() => dispatch(resetTimer())} className="secondaryButton">Reset</button>
         </div>
         <h1 id='time'>{`${minutes}:${seconds}`}</h1>
-        <h1>{formatTime(date)}</h1>
-        <button onClick={() => dispatch(changeUpdate())} className="primaryButton">
-           { update ? 'PAUSE' : 'START' }
-        </button>
+       
+            <button onClick={() => dispatch(changeUpdate())} className="primaryButton">
+               { update ? 'PAUSE' : 'START' }
+            </button>
+
     </div>
     )
 }

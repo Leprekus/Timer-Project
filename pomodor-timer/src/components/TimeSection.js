@@ -1,4 +1,4 @@
-import './timer.css'
+import '../features/timer/timer.css'
 import { useState, useEffect } from 'react'
 //import { useSelector, useDispatch } from 'react-redux'
 import { useSelector, useDispatch  } from 'react-redux'
@@ -13,16 +13,14 @@ import {
     selectSeconds,
     resetTimer,
     changePopupTrigger
-    } from './timerSlice'
-    import gearIcon from '../../images/gear-icon.png'
-import { TimeSection } from '../../components/TimeSection'
+    } from '../features/timer/timerSlice'
+    import gearIcon from '../images/gear-icon.png'
 
-export const Timer = () => {
+export const TimeSection = ( { section, } ) => {
     const dispatch = useDispatch()
     const timeSection = useSelector(selectTimeSection)
-    const section = 'pomodoro'
-    const minutes = timeSection.pomodoro.minutes
-    const seconds  = timeSection.pomodoro.seconds
+    const minutes = timeSection[section].minutes
+    const seconds  = timeSection[section].seconds
     const update = useSelector(selectUpdate)
     useEffect(() => {
         if(update) {
@@ -46,7 +44,7 @@ export const Timer = () => {
             <button onClick={() => dispatch(changeUpdate())} className="primaryButton">
                { update ? 'PAUSE' : 'START' }
             </button>
-            <TimeSection/>
+
     </div>
     )
 }

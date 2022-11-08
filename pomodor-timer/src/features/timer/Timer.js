@@ -1,52 +1,29 @@
 import './timer.css'
-import { useState, useEffect } from 'react'
-//import { useSelector, useDispatch } from 'react-redux'
-import { useSelector, useDispatch  } from 'react-redux'
-import {   
-    increaseTime, 
-    decreaseTime,
-    selectUpdate,
-    changeUpdate,
-    startTimer,
-    stopTimer,
-    selectTimeSection,
-    selectSeconds,
-    resetTimer,
-    changePopupTrigger
-    } from './timerSlice'
-    import gearIcon from '../../images/gear-icon.png'
+import { useState } from 'react'
+
 import { TimeSection } from '../../components/TimeSection'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectTimeSection, stopTimer } from './timerSlice'
 
 export const Timer = () => {
+    const [section, setSection] = useState('pomodoro')
+    const sections = useSelector(selectTimeSection)
+    const sectionIsUpdating = sections[section].update
     const dispatch = useDispatch()
-    const timeSection = useSelector(selectTimeSection)
-    const section = 'pomodoro'
-    const minutes = timeSection.pomodoro.minutes
-    const seconds  = timeSection.pomodoro.seconds
-    const update = useSelector(selectUpdate)
-    useEffect(() => {
-        if(update) {
-
-            dispatch(startTimer({ section }))
-        }
-        if(update === false){
-            dispatch(stopTimer())
-        }
-    }, [update, dispatch])
+    const handleClick = ({ target }) => {
+        //before rendering new section pause current timer
+        if(sectionIsUpdating) dispatch(stopTimer({ section }))
+        setSection(target.value)     
+    }
     return (
-    <div className='box'>
-        <button onClick={() => dispatch(changePopupTrigger())} className='secondaryButton'><img src={gearIcon} alt='gear icon'/></button>
-        <div className='buttonContainer'>
-            <button onClick={() =>dispatch(increaseTime({ section }))} className='secondaryButton'>Increase</button>
-            <button onClick={() =>dispatch(decreaseTime({ section }))} className='secondaryButton'>Decrease</button>
-            <button onClick={() => dispatch(resetTimer({ section }))} className="secondaryButton">Reset</button>
-        </div>
-        <h1 id='time'>{`${minutes}:${seconds}`}</h1>
-       
-            <button onClick={() => dispatch(changeUpdate())} className="primaryButton">
-               { update ? 'PAUSE' : 'START' }
-            </button>
-            <TimeSection/>
+    <div>
+        <nav>
+            <button value='pomodoro' onClick={handleClick}>Pomodoro</button>
+            <button value='shortBreak' onClick={handleClick}>Short Break</button>
+            <button value='longBreak' onClick={handleClick}>Long Break</button>
+        </nav>
+        <TimeSection section={section}/>
     </div>
+
     )
 }

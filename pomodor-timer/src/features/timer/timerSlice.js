@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit' 
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { selectCount } from '../counter/counterSlice'
 
 const initialState = {
@@ -7,19 +7,23 @@ const initialState = {
     time: {
         pomodoro: {
             minutes: '25',
-            seconds: '00'
+            seconds: '00',
+            update: false
         },
         shortBreak: {
             minutes: '5',
-            seconds: '00'
+            seconds: '00',
+            update: false
         },
         longBreak: {
             minutes: '15',
-            seconds: '00'
+            seconds: '00',
+            update: false
         }
     },
-    update: false,
-    popupTrigger: false
+    popupTrigger: false,
+    // 4 short breaks + 1 long break 
+    breakCounter: 0,
 }
 
 const timerSlice = createSlice({
@@ -28,21 +32,23 @@ const timerSlice = createSlice({
     // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
         increaseTime(state, { payload }) {
-            const { section } = payload 
+            const { section } = payload
 
             let minutes = parseInt(state.time[section].minutes)
             minutes += 25
             state.time[section].minutes = minutes.toString()
-            
+
         },
         decreaseTime(state, { payload }){
             const { section } = payload
             let minutes = parseInt(state.time[section].minutes)
             const check = minutes - 25 >= 0 ? minutes -= 25: 0
             state.time[section].minutes = check.toString()
-        }, 
-        changeUpdate(state) {
-            state.update = !state.update
+        },
+        changeUpdate(state, { payload }) {
+            const { section } = payload
+            const update = state.time[section].update
+            state.time[section].update = !update
         },
         updateMinutes(state, { payload }) {
             const { section } = payload
@@ -50,7 +56,7 @@ const timerSlice = createSlice({
             minutes -= 1
             if(minutes <= 9) {
                 minutes = `0${minutes}`
-            } 
+            }
             state.time[section].minutes = minutes.toString()
         },
         updateSeconds(state, { payload }) {
@@ -59,7 +65,7 @@ const timerSlice = createSlice({
             seconds -= 1
             if(seconds <= 9) {
                 seconds = `0${seconds}`
-            } 
+            }
             state.time[section].seconds = seconds.toString()
         },
         resetSeconds(state, { payload }) {
@@ -87,39 +93,34 @@ const timerSlice = createSlice({
                 state.update = false
 
             }
-            
+
         },
         changePopupTrigger(state) {
             state.popupTrigger = !state.popupTrigger
         }
     },
-  
+
 })
 
-export const { increaseTime, decreaseTime, changeUpdate, updateMinutes, updateSeconds, resetSeconds, resetTimer, 
+export const { increaseTime, decreaseTime, changeUpdate, updateMinutes, updateSeconds, resetSeconds, resetTimer,
                 changePopupTrigger} = timerSlice.actions
 export const selectTimeSection = state => state.timer.time
 export const selectSeconds = state => state.timer.seconds
-export const selectUpdate = state => state.timer.update
 
 export const selectPopupTrigger = state => state.timer.popupTrigger
 
 let intervalId;
 
 export const startTimer = (payload) => (dispatch, getState) => {
+    const { section } = payload
+    //set update to true
+    dispatch(changeUpdate({ section }))
     intervalId = setInterval(() => {
-        const { section } = payload
-
         const timeSection = selectTimeSection(getState())
         const minutes = timeSection[section].minutes;
         const seconds = timeSection[section].seconds;
        //stop when it reaches 00:00
-       if(minutes <= 0 && seconds <= 0)  {
-           return (
-           clearInterval(intervalId),
-           dispatch(changeUpdate())
-           )
-       }
+       if(minutes <= 0 && seconds <= 0) return dispatch(stopTimer({ section }))
        //reduces minutes and reset seconds to 59
        if(seconds <= 0){
         dispatch(updateMinutes({ section, timeUnit:'minutes' }))
@@ -129,12 +130,12 @@ export const startTimer = (payload) => (dispatch, getState) => {
        dispatch(updateSeconds({ section, timeUnit:'seconds'}))
 
    },1000)
-   
+
  };
- export const stopTimer = () => (dispatch, getState) => {
-    const update = selectUpdate(getState())
-    if(update === false) clearInterval(intervalId)
-   
+ export const stopTimer = (payload) => (dispatch, getState) => {
+    const { section } = payload
+    dispatch(changeUpdate({ section }))
+    clearInterval(intervalId)
  };
 
 export default timerSlice.reducer

@@ -21,16 +21,8 @@ export const TimeSection = ( { section, } ) => {
     const timeSection = useSelector(selectTimeSection)
     const minutes = timeSection[section].minutes
     const seconds  = timeSection[section].seconds
-    const update = useSelector(selectUpdate)
-    useEffect(() => {
-        if(update) {
+    const update = timeSection[section].update
 
-            dispatch(startTimer({ section }))
-        }
-        if(update === false){
-            dispatch(stopTimer())
-        }
-    }, [update, dispatch])
     return (
     <div className='box'>
         <button onClick={() => dispatch(changePopupTrigger())} className='secondaryButton'><img src={gearIcon} alt='gear icon'/></button>
@@ -41,7 +33,7 @@ export const TimeSection = ( { section, } ) => {
         </div>
         <h1 id='time'>{`${minutes}:${seconds}`}</h1>
        
-            <button onClick={() => dispatch(changeUpdate())} className="primaryButton">
+            <button onClick={update ? () => dispatch(stopTimer({ section })) : () => dispatch(startTimer({ section }))} className="primaryButton">
                { update ? 'PAUSE' : 'START' }
             </button>
 

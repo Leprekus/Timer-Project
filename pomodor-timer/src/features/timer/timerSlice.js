@@ -2,22 +2,22 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { selectCount } from '../counter/counterSlice'
 
 const initialState = {
-    minutes: '25',
-    seconds: '00',
+    currentRenderedSection: 'pomodoro',
+    customTime: {},
     time: {
         pomodoro: {
-            minutes: '25',
-            seconds: '00',
+            minutes: '00',
+            seconds: '01',
             update: false
         },
         shortBreak: {
-            minutes: '5',
-            seconds: '00',
+            minutes: '00',
+            seconds: '01',
             update: false
         },
         longBreak: {
-            minutes: '15',
-            seconds: '00',
+            minutes: '00',
+            seconds: '01',
             update: false
         }
     },
@@ -31,18 +31,36 @@ const timerSlice = createSlice({
     initialState,
     // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
+        setCustomTime(state, { payload }) {
+            //structure: 
+            // customTime: {
+            // section: {
+            // customMinutes
+            //  }
+            // }
+            const { section, customMinutes } = payload
+            state.customTime = { 
+                section : {
+                    customMinutes
+                }
+            }
+        },
         increaseTime(state, { payload }) {
-            const { section } = payload
-
+            const { section, customMinutes } = payload
             let minutes = parseInt(state.time[section].minutes)
-            minutes += 25
+            if(customMinutes){
+                minutes = customMinutes
+            }
+            else {
+                minutes += 25
+            }
             state.time[section].minutes = minutes.toString()
 
         },
         decreaseTime(state, { payload }){
             const { section } = payload
             let minutes = parseInt(state.time[section].minutes)
-            const check = minutes - 25 >= 0 ? minutes -= 25: 0
+            const check = minutes - 25 > 0 ? minutes -= 25: minutes
             state.time[section].minutes = check.toString()
         },
         changeUpdate(state, { payload }) {
@@ -68,6 +86,20 @@ const timerSlice = createSlice({
             }
             state.time[section].seconds = seconds.toString()
         },
+        updateCurrentRenderedSection(state, { payload }) {
+            state.currentRenderedSection = payload
+            
+        },
+        updateBreakCounter(state, { payload }){
+            console.log(payload)
+            if(payload === 0) {
+                const reset = 0
+                state.breakCounter = reset
+            } else {
+                const increment = state.breakCounter + 1
+                state.breakCounter = increment
+            }
+        },
         resetSeconds(state, { payload }) {
             const { section } = payload
             state.time[section].seconds = '60'
@@ -75,7 +107,8 @@ const timerSlice = createSlice({
         resetTimer(state, { payload }) {
             const { section } = payload
             if(section === 'pomodoro') {
-                state.time[section].minutes = '25'
+                const customMinutes = state.customMinutes[section].customMinutes
+                state.time[section].minutes = typeof customMinutes !== 'undefined' ? customMinutes : '25'
                 state.time[section].seconds = '00'
                 state.update = false
             }
@@ -102,10 +135,14 @@ const timerSlice = createSlice({
 
 })
 
-export const { increaseTime, decreaseTime, changeUpdate, updateMinutes, updateSeconds, resetSeconds, resetTimer,
-                changePopupTrigger} = timerSlice.actions
+export const { increaseTime, decreaseTime, changeUpdate, updateMinutes,
+               updateSeconds, resetSeconds, resetTimer, changePopupTrigger,
+               updateCurrentRenderedSection, updateBreakCounter, setCustomTime
+            } = timerSlice.actions
 export const selectTimeSection = state => state.timer.time
 export const selectSeconds = state => state.timer.seconds
+export const selectCurrentRenderedSection = state => state.timer.currentRenderedSection
+export const selectBreakCounter = state => state.timer.breakCounter
 
 export const selectPopupTrigger = state => state.timer.popupTrigger
 
@@ -120,7 +157,7 @@ export const startTimer = (payload) => (dispatch, getState) => {
         const minutes = timeSection[section].minutes;
         const seconds = timeSection[section].seconds;
        //stop when it reaches 00:00
-       if(minutes <= 0 && seconds <= 0) return dispatch(stopTimer({ section }))
+       if(minutes <= 0 && seconds <= 0) return dispatch(handleBreak(section))
        //reduces minutes and reset seconds to 59
        if(seconds <= 0){
         dispatch(updateMinutes({ section, timeUnit:'minutes' }))
@@ -132,10 +169,56 @@ export const startTimer = (payload) => (dispatch, getState) => {
    },1000)
 
  };
+
+ export const handleBreak = (section) => (dispatch, getState) => {
+    const breakCounter = selectBreakCounter(getState())
+    console.log(breakCounter)
+    //stop timer
+    dispatch(stopTimer({ section }))
+    //render next section
+    if(breakCounter < 4) {
+        if(section === 'pomodoro') return (
+                dispatch(updateCurrentRenderedSection('shortBreak')),
+                dispatch(startTimer({ section: 'shortBreak' })),
+                dispatch(resetTimer({ section:'pomodoro' }))
+            )
+        
+        if(section === 'shortBreak') return (
+            dispatch(updateCurrentRenderedSection('pomodoro')),
+            dispatch(startTimer({ section: 'pomodoro' })),
+            dispatch(updateBreakCounter())
+        )
+
+    }
+    //if long break, render pomodoro 
+    if(breakCounter === 6) return (
+        dispatch(stopTimer({section: 'longBreak'})),
+        dispatch(updateCurrentRenderedSection('pomodoro')),
+        dispatch(updateBreakCounter(0))
+    )
+    //if 4 short breaks then long break
+    return (
+            dispatch(updateCurrentRenderedSection('longBreak')),
+            dispatch(startTimer({ section: 'longBreak' })),
+            dispatch(updateBreakCounter())
+    )
+    //else short break 
+}
  export const stopTimer = (payload) => (dispatch, getState) => {
     const { section } = payload
     dispatch(changeUpdate({ section }))
     clearInterval(intervalId)
+ };
+
+ export const handleFormSubmission = (payload) => (dispatch, getState) => {
+    payload.map(sectionObject => {
+        const { section, customMinutes } = sectionObject
+        return (
+            dispatch(increaseTime({ section, customMinutes })),
+            dispatch(setCustomTime({ section, customMinutes }))
+            )
+    })
+    dispatch(changePopupTrigger())
  };
 
 export default timerSlice.reducer

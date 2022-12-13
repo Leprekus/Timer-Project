@@ -6,16 +6,19 @@ const initialState = {
     customTime: {},
     time: {
         pomodoro: {
+            customMinutes: undefined,
             minutes: '00',
             seconds: '01',
             update: false
         },
         shortBreak: {
+            customMinutes: undefined,
             minutes: '00',
             seconds: '01',
             update: false
         },
         longBreak: {
+            customMinutes: undefined,
             minutes: '00',
             seconds: '01',
             update: false
@@ -32,17 +35,9 @@ const timerSlice = createSlice({
     // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
         setCustomTime(state, { payload }) {
-            //structure: 
-            // customTime: {
-            // section: {
-            // customMinutes
-            //  }
-            // }
             const { section, customMinutes } = payload
-            state.customTime = { 
-                section : {
-                    customMinutes
-                }
+            if(customMinutes){
+                state.time[section].customMinutes = customMinutes
             }
         },
         increaseTime(state, { payload }) {
@@ -92,7 +87,7 @@ const timerSlice = createSlice({
         },
         updateBreakCounter(state, { payload }){
             console.log(payload)
-            if(payload === 0) {
+            if(payload) {
                 const reset = 0
                 state.breakCounter = reset
             } else {
@@ -106,22 +101,22 @@ const timerSlice = createSlice({
         },
         resetTimer(state, { payload }) {
             const { section } = payload
+            let customMinutes = state.time[section].customMinutes
             if(section === 'pomodoro') {
-                const customMinutes = state.customMinutes[section].customMinutes
-                state.time[section].minutes = typeof customMinutes !== 'undefined' ? customMinutes : '25'
+                state.time[section].minutes = customMinutes ? customMinutes : '25'
                 state.time[section].seconds = '00'
                 state.update = false
             }
 
             if(section === 'shortBreak') {
-                state.time[section].minutes = '5'
+                state.time[section].minutes = customMinutes ? customMinutes : '5'
                 state.time[section].seconds = '00'
                 state.update = false
 
             }
 
             if(section === 'longBreak') {
-                state.time[section].minutes = '15'
+                state.time[section].minutes = customMinutes ? customMinutes : '15'
                 state.time[section].seconds = '00'
                 state.update = false
 

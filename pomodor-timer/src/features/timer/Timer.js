@@ -1,5 +1,5 @@
 import './timer.css'
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { TimeSection } from '../../components/TimeSection'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,7 +9,7 @@ export const Timer = () => {
     const currentRenderedSection = useSelector(selectCurrentRenderedSection)
     const breakCounter = useSelector(selectBreakCounter)
     const [section, setSection] = useState(currentRenderedSection)
-    useEffect(()=>{
+    useMemo(()=>{
         setSection(currentRenderedSection)
     },[currentRenderedSection])
     const sections = useSelector(selectTimeSection)

@@ -1,0 +1,72 @@
+.taskButton {
+    padding: 0.7em 0.9em;
+    background: #efefef;
+    border: none;
+    border-radius: .5rem;
+    color: #444;
+    font-weight: 700;
+    text-align: center;
+    outline: none;
+    cursor: pointer;
+    transition: .2s ease-in-out;
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .7),
+                -6px -6px 10px rgba(255, 255, 255, .5),
+                6px 6px 8px rgba(255, 255, 255, .075),
+                6px 6px 10px rgba(0, 0, 0, .15);
+    text-decoration: none;
+
+    min-width: 80px;
+    min-height: 90px;
+
+    font-size: 1.3rem;
+
+}
+
+.taskButton:active {
+    background: #dcdcdc;
+}
+
+.task {
+    list-style: none;
+    
+    width: 500px;
+    height: 200px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.taskContainer {
+    background: #ecf0f3;
+    width: 400px;
+    height: 200px;
+    border-radius: .5rem;
+    transition: .2s ease-in-out;
+    
+    text-decoration: none;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3rem;
+    
+}
+
+
+.fields {
+    border-radius: .5rem;
+    border-style: none;
+    outline:none;
+    background: rgb(255, 255, 255);
+    font-size: 18px;
+    padding: 0.5rem 1rem;
+    color: #555;
+    max-width: 300px;
+    
+    overflow-x: hidden;
+    resize: none;
+    height: fit-content;
+  }
+
+

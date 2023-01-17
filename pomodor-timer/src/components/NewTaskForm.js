@@ -7,13 +7,14 @@ import { addTask, editTask, saveChanges, selectTaskToEdit } from "../features/ta
 export const NewTaskForm = (props) => { 
    const [title, setTitle] = useState('')
    const [description, setDescription] = useState('')
-   
+   const [editAdd, setEditAdd] = useState('+')
     const dispatch = useDispatch()
     const taskToEdit = useSelector(selectTaskToEdit)
     useEffect(()=>{
         if(props.taskId) {
             setTitle(props.title)
             setDescription(props.description)
+            setEditAdd('save')
         }
     
         console.log(taskToEdit)
@@ -39,6 +40,7 @@ export const NewTaskForm = (props) => {
         e.preventDefault()
         dispatch(saveChanges({
             id: taskToEdit.id,
+            button: 'edit',
             title,
             description,
         }))
@@ -48,7 +50,7 @@ export const NewTaskForm = (props) => {
 
     return (
     <form onSubmit={taskToEdit.id ? handleSaveChanges : handleForm} className="task">
-            <button className="taskButton">{taskToEdit.id ? 'save' : '+' }</button>
+            <button className="taskButton">{ editAdd }</button>
             <div className="taskContainer">
                 <input onChange={({ target }) => setTitle(target.value)} className="fields" placeholder='Title' value={title}/>
                 <textarea onChange={({ target }) => setDescription(target.value)} className="fields" placeholder='Notes...' value={description}></textarea>

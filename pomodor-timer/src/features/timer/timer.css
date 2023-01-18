@@ -4,6 +4,10 @@ nav {
     width: 100%;
     margin: 0.5rem;
 }
+
+.active {
+    background: rgba(63, 63, 63, 0.9) !important;
+}
 .navItem {
     background: rgba( 113, 113, 113, 0.7 );
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
@@ -95,5 +99,6 @@ nav {
     border-radius: 0.5rem;
     height: 350px;
     width: 450px;
+    margin-top: 1.5rem;
 
 }

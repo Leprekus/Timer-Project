@@ -7,20 +7,20 @@ const initialState = {
     time: {
         pomodoro: {
             customMinutes: undefined,
-            minutes: '00',
-            seconds: '01',
+            minutes: '25',
+            seconds: '00',
             update: false
         },
         shortBreak: {
             customMinutes: undefined,
-            minutes: '00',
-            seconds: '01',
+            minutes: '05',
+            seconds: '00',
             update: false
         },
         longBreak: {
             customMinutes: undefined,
-            minutes: '00',
-            seconds: '01',
+            minutes: '15',
+            seconds: '00',
             update: false
         }
     },

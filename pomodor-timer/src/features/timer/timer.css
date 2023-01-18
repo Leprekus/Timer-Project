@@ -1,5 +1,32 @@
-#time {
+nav {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    margin: 0.5rem;
+}
 
+.active {
+    background: rgba(63, 63, 63, 0.9) !important;
+}
+.navItem {
+    background: rgba( 113, 113, 113, 0.7 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    padding: 1rem;
+    color: #FFF;
+    font-size: 18px;
+}
+
+.navItem:hover {
+    transition: 1s ease-out;
+    cursor: pointer;
+    background: rgba(63, 63, 63, 0.9);
+
+}
+#time {
     color: rgb(48, 48, 48);
 }
 
@@ -72,5 +99,6 @@
     border-radius: 0.5rem;
     height: 350px;
     width: 450px;
+    margin-top: 1.5rem;
 
 }

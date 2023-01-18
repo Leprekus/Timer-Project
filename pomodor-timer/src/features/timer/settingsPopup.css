@@ -19,6 +19,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: flex-end;
     padding: 3rem;
 
 }
@@ -27,6 +28,7 @@
     display: flex;
     flex-wrap: wrap;
     height: fit-content;
+    justify-content: space-between;
 }
 
 .inputContainer {
